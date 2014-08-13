@@ -51,16 +51,38 @@
     <property name="title">
      <string>&amp;Задачи</string>
     </property>
+    <addaction name="correctionRandA"/>
+    <addaction name="separator"/>
+    <addaction name="action_2"/>
+    <addaction name="separator"/>
+    <addaction name="location"/>
+    <addaction name="filterOfEvent"/>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
      <string>&amp;Таблицы</string>
     </property>
+    <addaction name="tableOfSignals"/>
+    <addaction name="tableOfClasters"/>
+    <addaction name="StatisticsByChannel"/>
+    <addaction name="equipmentParameters"/>
+    <addaction name="sensorsLocation"/>
+    <addaction name="timeOfCommandStartPause"/>
+    <addaction name="ASLbyChannel"/>
+    <addaction name="find"/>
    </widget>
    <widget class="QMenu" name="menu_5">
     <property name="title">
      <string>&amp;Графики</string>
     </property>
+    <addaction name="createGraphics"/>
+    <addaction name="graphicsAnalysis"/>
+    <addaction name="localizationIncrease"/>
+    <addaction name="localizationReduce"/>
+    <addaction name="zonalLocalization"/>
+    <addaction name="separator"/>
+    <addaction name="copy"/>
+    <addaction name="saveInFile"/>
    </widget>
    <widget class="QMenu" name="menu_6">
     <property name="title">
@@ -69,7 +91,7 @@
    </widget>
    <widget class="QMenu" name="menu_7">
     <property name="title">
-     <string>О программе</string>
+     <string>О &amp;программе</string>
     </property>
    </widget>
    <addaction name="menu"/>
@@ -173,6 +195,107 @@
   <action name="exit">
    <property name="text">
     <string>Выход</string>
+   </property>
+  </action>
+  <action name="correctionRandA">
+   <property name="text">
+    <string>Коррекция R и A</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Подготовка данных</string>
+   </property>
+  </action>
+  <action name="location">
+   <property name="text">
+    <string>Локация...</string>
+   </property>
+  </action>
+  <action name="filterOfEvent">
+   <property name="text">
+    <string>Фильтрация событий...</string>
+   </property>
+  </action>
+  <action name="tableOfSignals">
+   <property name="text">
+    <string>Таблица сигналов</string>
+   </property>
+  </action>
+  <action name="tableOfClasters">
+   <property name="text">
+    <string>Таблица кластеров</string>
+   </property>
+  </action>
+  <action name="StatisticsByChannel">
+   <property name="text">
+    <string>Статистика по каналам</string>
+   </property>
+  </action>
+  <action name="equipmentParameters">
+   <property name="text">
+    <string>Параметры аппаратуры</string>
+   </property>
+  </action>
+  <action name="sensorsLocation">
+   <property name="text">
+    <string>Расположение приемников</string>
+   </property>
+  </action>
+  <action name="timeOfCommandStartPause">
+   <property name="text">
+    <string>Время команд СТАРТ, ПАУЗА</string>
+   </property>
+  </action>
+  <action name="ASLbyChannel">
+   <property name="text">
+    <string>ASL по каналам</string>
+   </property>
+  </action>
+  <action name="find">
+   <property name="text">
+    <string>Найти...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="createGraphics">
+   <property name="text">
+    <string>Создание графиков...</string>
+   </property>
+  </action>
+  <action name="graphicsAnalysis">
+   <property name="text">
+    <string>Графический анализ</string>
+   </property>
+  </action>
+  <action name="localizationIncrease">
+   <property name="text">
+    <string>Локализация (увеличить)</string>
+   </property>
+  </action>
+  <action name="localizationReduce">
+   <property name="text">
+    <string>Локализация (уменьшить)</string>
+   </property>
+  </action>
+  <action name="zonalLocalization">
+   <property name="text">
+    <string>Зонная локация</string>
+   </property>
+  </action>
+  <action name="copy">
+   <property name="text">
+    <string>Копировать</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+K</string>
+   </property>
+  </action>
+  <action name="saveInFile">
+   <property name="text">
+    <string>Сохранить в файл...</string>
    </property>
   </action>
  </widget>
