@@ -36,6 +36,8 @@
     <addaction name="separator"/>
     <addaction name="readGraphicsSet"/>
     <addaction name="saveGraphicsSetAs"/>
+    <addaction name="separator"/>
+    <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -43,7 +45,7 @@
     </property>
     <addaction name="setDefaultColor"/>
     <addaction name="setBlackWhiteColor"/>
-    <addaction name="setColor"/>
+    <addaction name="setManualColor"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -85,6 +87,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="createDatabase"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="createDatabase">
@@ -159,12 +162,17 @@
     <string>Чёрно-белый</string>
    </property>
   </action>
-  <action name="setColor">
+  <action name="setManualColor">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>Установка...</string>
+   </property>
+  </action>
+  <action name="exit">
+   <property name="text">
+    <string>Выход</string>
    </property>
   </action>
  </widget>

@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 
@@ -17,6 +18,17 @@ public:
 
 private:
     Ui::MainWindow *ui;
+private slots:
+    void openDatabaseDialog();
+    void createDatabaseDialog();
+    void createSensorsPositionDialog();
+    void readSensorsPositionDialog();
+    void saveSensorsPositionAsDialog();
+    void readGraphicsSetDialog();
+    void saveGraphicsSetAsDialog();
+    void setDefaultColorDialog();
+    void setBlackWhiteColorDialog();
+    void setManualColorDialog();
 };
 
 #endif // MAINWINDOW_H
