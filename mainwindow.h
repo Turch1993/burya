@@ -29,6 +29,28 @@ private slots:
     void setDefaultColorDialog();
     void setBlackWhiteColorDialog();
     void setManualColorDialog();
+    void correctionRandADialog();
+    void locationDialog();
+    void filterOfEventDialog();
+    void tableOfSignalsDialog();
+    void tableOfClastersDialog();
+    void statisticsByChannelDialog();
+    void equipmentParametersDialog();
+    void sensorsLocaitonDialog();
+    void timeOfCommandStartPauseDialog();
+    void ASLbyChannelDialog();
+    void findDialog();
+    void createGraphicsDialog();
+    void graphicsAnalysisDialog();
+    void localizationIncreaseDialog();
+    void localizationReduseDialog();
+    void zonalLocalizationDialog();
+    void copyDialog();
+    void saveInFileDialog();
+    void filtrationOfSignalsDialog();
+    void deletePeriodicNoiseDialog();
+    void deleteCasualNoiseDialog();
+    void aboutDialog();
 };
 
 #endif // MAINWINDOW_H

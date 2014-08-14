@@ -6,8 +6,8 @@
 class database
 {
 public:
-    void createDatabase(QString path);
-    void readDatabase(QString path);
+    bool createMainDatabase(QString path);
+    bool readMainDatabase(QString path);
 };
 
 #endif // DATABASE_H

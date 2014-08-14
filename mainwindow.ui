@@ -23,7 +23,7 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>&amp;Файл</string>
     </property>
@@ -39,7 +39,10 @@
     <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
-   <widget class="QMenu" name="menu_2">
+   <widget class="QMenu" name="menuColor">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="title">
      <string>&amp;Цвет</string>
     </property>
@@ -47,18 +50,32 @@
     <addaction name="setBlackWhiteColor"/>
     <addaction name="setManualColor"/>
    </widget>
-   <widget class="QMenu" name="menu_3">
+   <widget class="QMenu" name="menuTasks">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>&amp;Задачи</string>
     </property>
+    <widget class="QMenu" name="menuPreparationOfSensors">
+     <property name="title">
+      <string>Подготовка данных</string>
+     </property>
+     <addaction name="filtrationOfSignals"/>
+     <addaction name="deletePeriodicNoise"/>
+     <addaction name="deleteCasualNoise"/>
+    </widget>
     <addaction name="correctionRandA"/>
     <addaction name="separator"/>
-    <addaction name="action_2"/>
+    <addaction name="menuPreparationOfSensors"/>
     <addaction name="separator"/>
     <addaction name="location"/>
     <addaction name="filterOfEvent"/>
    </widget>
-   <widget class="QMenu" name="menu_4">
+   <widget class="QMenu" name="menuTables">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>&amp;Таблицы</string>
     </property>
@@ -71,7 +88,10 @@
     <addaction name="ASLbyChannel"/>
     <addaction name="find"/>
    </widget>
-   <widget class="QMenu" name="menu_5">
+   <widget class="QMenu" name="menuGraphics">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>&amp;Графики</string>
     </property>
@@ -84,23 +104,26 @@
     <addaction name="copy"/>
     <addaction name="saveInFile"/>
    </widget>
-   <widget class="QMenu" name="menu_6">
+   <widget class="QMenu" name="menuWindow">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>&amp;Окно</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_7">
+   <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>О &amp;программе</string>
     </property>
    </widget>
-   <addaction name="menu"/>
-   <addaction name="menu_2"/>
-   <addaction name="menu_3"/>
-   <addaction name="menu_4"/>
-   <addaction name="menu_5"/>
-   <addaction name="menu_6"/>
-   <addaction name="menu_7"/>
+   <addaction name="menuFile"/>
+   <addaction name="menuColor"/>
+   <addaction name="menuTasks"/>
+   <addaction name="menuTables"/>
+   <addaction name="menuGraphics"/>
+   <addaction name="menuWindow"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -109,7 +132,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="createDatabase"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="createDatabase">
@@ -145,6 +167,9 @@
    </property>
   </action>
   <action name="saveSensorsPositionAs">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Сохранить расстановку датчиков как...</string>
    </property>
@@ -161,6 +186,9 @@
    </property>
   </action>
   <action name="saveGraphicsSetAs">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Сохранить установки графиков как...</string>
    </property>
@@ -200,11 +228,6 @@
   <action name="correctionRandA">
    <property name="text">
     <string>Коррекция R и A</string>
-   </property>
-  </action>
-  <action name="action_2">
-   <property name="text">
-    <string>Подготовка данных</string>
    </property>
   </action>
   <action name="location">
@@ -296,6 +319,24 @@
   <action name="saveInFile">
    <property name="text">
     <string>Сохранить в файл...</string>
+   </property>
+  </action>
+  <action name="filtrationOfSignals">
+   <property name="text">
+    <string>Фильтрация сигналов...</string>
+   </property>
+  </action>
+  <action name="deletePeriodicNoise">
+   <property name="text">
+    <string>Удаление периодических помех...</string>
+   </property>
+   <property name="toolTip">
+    <string>Удаление периодических помех</string>
+   </property>
+  </action>
+  <action name="deleteCasualNoise">
+   <property name="text">
+    <string>Удаление случайных э/м помех...</string>
    </property>
   </action>
  </widget>
