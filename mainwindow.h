@@ -26,9 +26,9 @@ private slots:
     void saveSensorsPositionAsDialog();
     void readGraphicsSetDialog();
     void saveGraphicsSetAsDialog();
-    void setDefaultColorDialog();
-    void setBlackWhiteColorDialog();
-    void setManualColorDialog();
+    void setDefaultColorDialog(bool isChecked);
+    void setBlackWhiteColorDialog(bool isChecked);
+    void setManualColorDialog(bool isChecked);
     void correctionRandADialog();
     void locationDialog();
     void filterOfEventDialog();

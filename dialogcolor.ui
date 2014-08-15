@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>DialogColor</class>
  <widget class="QDialog" name="DialogColor">
@@ -5,13 +6,105 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>271</width>
+    <height>210</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>271</width>
+    <height>210</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>271</width>
+    <height>210</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>110</y>
+     <width>151</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Выбрать</string>
+   </property>
+   <widget class="QSplitter" name="splitter">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>131</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+    <widget class="QPushButton" name="backgroundColor">
+     <property name="text">
+      <string>Цвет &amp;фона...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="lineColor">
+     <property name="text">
+      <string>Цвет &amp;линий/точек...</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QGraphicsView" name="graphicsView">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>251</width>
+     <height>91</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QSplitter" name="splitter_2">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>120</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <widget class="QPushButton" name="apply">
+    <property name="text">
+     <string>&amp;Применить</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="set">
+    <property name="text">
+     <string>&amp;Установить</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cancel">
+    <property name="text">
+     <string>&amp;Отменить</string>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <resources/>
  <connections/>

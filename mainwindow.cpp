@@ -2,8 +2,9 @@
 #include "database.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
-#include <QColorDialog>
+
 #include <QMessageBox>
+#include <dialogcolor.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,9 +19,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->saveSensorsPositionAs, SIGNAL(triggered()), this, SLOT(saveSensorsPositionAsDialog()));
     connect(ui->readGraphicsSet, SIGNAL(triggered()), this, SLOT(readGraphicsSetDialog()));
     connect(ui->saveGraphicsSetAs, SIGNAL(triggered()), this, SLOT(saveGraphicsSetAsDialog()));
-    connect(ui->setDefaultColor, SIGNAL(triggered()), this, SLOT(setDefaultColorDialog()));
-    connect(ui->setBlackWhiteColor, SIGNAL(triggered()), this, SLOT(setBlackWhiteColorDialog()));
-    connect(ui->setManualColor, SIGNAL(triggered()), this, SLOT(setManualColorDialog()));
+    connect(ui->setDefaultColor, SIGNAL(triggered(bool)), this, SLOT(setDefaultColorDialog(bool)));
+    connect(ui->setBlackWhiteColor, SIGNAL(triggered(bool)), this, SLOT(setBlackWhiteColorDialog(bool)));
+    connect(ui->setManualColor, SIGNAL(triggered(bool)), this, SLOT(setManualColorDialog(bool)));
     connect(ui->correctionRandA, SIGNAL(triggered()), this, SLOT(correctionRandADialog()));
     connect(ui->location, SIGNAL(triggered()), this, SLOT(locationDialog()));
     connect(ui->filterOfEvent, SIGNAL(triggered()), this, SLOT(filterOfEventDialog()));
@@ -43,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->deletePeriodicNoise, SIGNAL(triggered()), this, SLOT(deletePeriodicNoiseDialog()));
     connect(ui->deleteCasualNoise, SIGNAL(triggered()), this, SLOT(deleteCasualNoiseDialog()));
     connect(ui->menuAbout, SIGNAL(aboutToShow()), this, SLOT(aboutDialog()));
+    ui->setDefaultColor->setChecked(true);
 }
 
 MainWindow::~MainWindow()
@@ -66,9 +68,10 @@ void MainWindow::openDatabaseDialog()
 
 void MainWindow::createDatabaseDialog()
 {
-    QString path = QFileDialog::getSaveFileName(0, "Создать базу данных", "База данных", "Файлы баз данных (*.db)");
+    QString pathFile = QFileDialog::getOpenFileName(0, "Создать базу данных", "База данных", "Файлы АЭ (*.cmr)");
+    QString pathBase = QFileDialog::getSaveFileName(0, "Создать базу данных", "База данных", "Файлы баз данных (*.db)");
     database *db = new database;
-    bool isCreated = db->createMainDatabase(path);
+    bool isCreated = db->createMainDatabase(pathFile, pathBase);
     if(isCreated)
     {
     ui->menuGraphics->setEnabled(true);
@@ -103,19 +106,33 @@ void MainWindow::saveGraphicsSetAsDialog()
 
 }
 
-void MainWindow::setDefaultColorDialog()
+void MainWindow::setDefaultColorDialog(bool isChecked)
 {
-
+    if (isChecked)
+    {
+        ui->setBlackWhiteColor->setChecked(false);
+        ui->setManualColor->setChecked(false);
+    }
 }
 
-void MainWindow::setBlackWhiteColorDialog()
+void MainWindow::setBlackWhiteColorDialog(bool isChecked)
 {
-
+    if (isChecked)
+    {
+        ui->setDefaultColor->setChecked(false);
+        ui->setManualColor->setChecked(false);
+    }
 }
 
-void MainWindow::setManualColorDialog()
+void MainWindow::setManualColorDialog(bool isChecked)
 {
-
+    if (isChecked)
+    {
+        ui->setBlackWhiteColor->setChecked(false);
+        ui->setDefaultColor->setChecked(false);
+    }
+    DialogColor *color = new DialogColor;
+    color->show();
 }
 
 void MainWindow::correctionRandADialog()
@@ -226,5 +243,5 @@ void MainWindow::deleteCasualNoiseDialog()
 void MainWindow::aboutDialog()
 {
     QMessageBox *about = new QMessageBox;
-    about->about(0, "О программе", "Пров\nерка");
+    about->about(0, "О программе", "Проверка");
 }

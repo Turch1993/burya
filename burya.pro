@@ -15,9 +15,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    database.cpp
+    database.cpp \
+    dialogcolor.cpp
 
 HEADERS  += mainwindow.h \
-    database.h
+    database.h \
+    dialogcolor.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dialogcolor.ui
