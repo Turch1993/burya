@@ -1,13 +1,19 @@
 #include "database.h"
 #include <QMessageBox>
 #include <QFile>
+#include <QProgressDialog>
 
 bool database::createMainDatabase(QString pathFile, QString pathBase)
 {
+
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(pathBase);
     bool isCreated = db.open();
     QSqlQuery *query = new QSqlQuery;
+    query->exec("PRAGMA synchronous=OFF");
+    query->exec("PRAGMA temp_store=MEMORY");
+    query->exec("PRAGMA count_changes=FALSE");
+    query->exec("PRAGMA journal_mode=OFF");
     query->exec("CREATE TABLE data"
                         "(Channel                   INTEGER,"
                         "RegTime                    REAL,"
@@ -20,24 +26,35 @@ bool database::createMainDatabase(QString pathFile, QString pathBase)
                         "ASLanddB                   INTEGER,"
                         "isForm                     INTEGER)"
                 );
-    //query->exec("INSERT INTO t (x, y) VALUES (20, \'ex\')");
     FILE *data;
     QByteArray p (pathFile.toUtf8());
     char *ph = p.data();
     data = fopen(ph, "rb");
-    qint32 id;
-    int i=0;
-    int pos = 0;
-    qint32 channel;
-
+    qint32 id, channel, maxAmp, riseTime, firstPeakAmp, riseTimeBeforeFirstPeak,
+            durationOfSignal, countOscillation, ASLanddB, isForm;
+    qint64 regTime;
+    fseek(data, 0, SEEK_END);
+    QProgressDialog *progress = new QProgressDialog("Создание базы данных...", "&Отмена", 0, ftell(data));
+    fseek(data, 0, SEEK_SET);
+    progress->setWindowTitle("Пожалуйста подождите");
+    progress->setMinimumDuration(0);
+    progress->setAutoClose(true);
+    query->exec("BEGIN");
     while (id!=ID_EOM)
     {
-        fread(&id, sizeof(qint32), 1, data);
-        pos += 4;
-        //qDebug()<<id;
-        /*if (id==ID_SIG)
+        fread(&id, 4, 1, data);
+        if (id==ID_SIG)
         {
-            fread(&channel, sizeof(qint32), 1, data);
+            fread(&channel, 4, 1, data);
+            fread(&regTime, 8, 1, data);
+            fread(&maxAmp, 4, 1, data);
+            fread(&riseTime, 4, 1, data);
+            fread(&firstPeakAmp, 4, 1, data);
+            fread(&riseTimeBeforeFirstPeak, 4, 1, data);
+            fread(&durationOfSignal, 4, 1, data);
+            fread(&countOscillation, 4, 1, data);
+            fread(&ASLanddB, 4, 1, data);
+            fread(&isForm, 1, 1, data);
             query->prepare("INSERT INTO data"
                                     " (Channel, RegTime, MaxAmp, RiseTIme,"
                                     "FirstPeakAmp, RiseTImeBeforeFirstPeak,"
@@ -46,29 +63,24 @@ bool database::createMainDatabase(QString pathFile, QString pathBase)
                                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                            );
             query->addBindValue(channel);
-            query->addBindValue(0);
-            query->addBindValue(0);
-            query->addBindValue(0);
-            query->addBindValue(0);
-            query->addBindValue(0);
-            query->addBindValue(0);
-            query->addBindValue(0);
-            query->addBindValue(0);
-            query->addBindValue(0);
+            query->addBindValue(regTime);
+            query->addBindValue(maxAmp);
+            query->addBindValue(riseTime);
+            query->addBindValue(firstPeakAmp);
+            query->addBindValue(riseTimeBeforeFirstPeak);
+            query->addBindValue(durationOfSignal);
+            query->addBindValue(countOscillation);
+            query->addBindValue(ASLanddB);
+            query->addBindValue(isForm);
             query->exec();
-            //qDebug()<<channel;
-        }*/
-        query->prepare("INSERT INTO data (Channel) VALUES (?)");
-        query->addBindValue(id);
-        query->exec();
-        pos += passBytes(id);
-        if (id==ID_EOM)
-        {
-            qDebug()<<"YES";
-            break;
+
         }
-        fseek(data, pos, SEEK_SET);
+        fseek(data, passBytes(id), SEEK_CUR);
+        progress->setValue(ftell(data));
+        qApp->processEvents();
     }
+    query->exec("COMMIT");
+    db.close();
     fclose(data);
 
     /*if (!isCreated)
@@ -110,18 +122,18 @@ int database::passBytes(qint32 id)
     case ID_MDF:
         return 12;
     case ID_HW:
-        return 312;
+        return 304;
     case ID_TDD:
         return 40;
     case ID_PAR:
         return 16;
     case ID_SIG:
-        return 41;
+        return 0;
     case ID_START:
         return 4;
     case ID_PAUSE:
         return 4;
     case ID_EOM:
-        return -5;
+        return 0;
     }
 }
