@@ -26,9 +26,12 @@ private slots:
     void saveSensorsPositionAsDialog();
     void readGraphicsSetDialog();
     void saveGraphicsSetAsDialog();
-    void setDefaultColorDialog(bool isChecked);
+    void readFileFunctionAttenuationDialog();
+    void saveFileFunctionAttenuationDialog();
     void setBlackWhiteColorDialog(bool isChecked);
     void setManualColorDialog(bool isChecked);
+    void enterEditFunctionAttenuationDialog();
+    void computeAmplitudeEventsDialog();
     void correctionRandADialog();
     void locationDialog();
     void filterOfEventDialog();
@@ -42,8 +45,7 @@ private slots:
     void findDialog();
     void createGraphicsDialog();
     void graphicsAnalysisDialog();
-    void localizationIncreaseDialog();
-    void localizationReduseDialog();
+    void localizationDialog();
     void zonalLocalizationDialog();
     void copyDialog();
     void saveInFileDialog();

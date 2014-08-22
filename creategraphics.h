@@ -16,7 +16,7 @@ public:
     ~createGraphics();
 
 private:
-    Ui::createGraphics *ui;
+    Ui::createGraphics *ui_graphics;
 };
 
 #endif // CREATEGRAPHICS_H

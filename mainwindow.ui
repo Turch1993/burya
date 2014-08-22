@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>738</width>
-    <height>451</height>
+    <width>743</width>
+    <height>448</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>738</width>
+     <width>743</width>
      <height>21</height>
     </rect>
    </property>
@@ -27,15 +27,18 @@
     <property name="title">
      <string>&amp;Файл</string>
     </property>
-    <addaction name="createDatabase"/>
     <addaction name="openDatabase"/>
+    <addaction name="createDatabase"/>
     <addaction name="separator"/>
-    <addaction name="createSensorsPosition"/>
     <addaction name="readSensorsPosition"/>
+    <addaction name="createSensorsPosition"/>
     <addaction name="saveSensorsPositionAs"/>
     <addaction name="separator"/>
     <addaction name="readGraphicsSet"/>
     <addaction name="saveGraphicsSetAs"/>
+    <addaction name="separator"/>
+    <addaction name="readFileAttenuation"/>
+    <addaction name="saveFileAttenuationAs"/>
     <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
@@ -46,13 +49,12 @@
     <property name="title">
      <string>&amp;Цвет</string>
     </property>
-    <addaction name="setDefaultColor"/>
     <addaction name="setBlackWhiteColor"/>
     <addaction name="setManualColor"/>
    </widget>
    <widget class="QMenu" name="menuTasks">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>&amp;Задачи</string>
@@ -65,16 +67,17 @@
      <addaction name="deletePeriodicNoise"/>
      <addaction name="deleteCasualNoise"/>
     </widget>
+    <addaction name="enter_editFunctionAttenuation"/>
+    <addaction name="computeAmplitudeEvents"/>
     <addaction name="correctionRandA"/>
     <addaction name="separator"/>
     <addaction name="menuPreparationOfSensors"/>
     <addaction name="separator"/>
     <addaction name="location"/>
-    <addaction name="filterOfEvent"/>
    </widget>
    <widget class="QMenu" name="menuTables">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>&amp;Таблицы</string>
@@ -86,19 +89,19 @@
     <addaction name="sensorsLocation"/>
     <addaction name="timeOfCommandStartPause"/>
     <addaction name="ASLbyChannel"/>
+    <addaction name="separator"/>
     <addaction name="find"/>
    </widget>
    <widget class="QMenu" name="menuGraphics">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>&amp;Графики</string>
     </property>
     <addaction name="createGraphics"/>
     <addaction name="graphicsAnalysis"/>
-    <addaction name="localizationIncrease"/>
-    <addaction name="localizationReduce"/>
+    <addaction name="localization"/>
     <addaction name="zonalLocalization"/>
     <addaction name="separator"/>
     <addaction name="copy"/>
@@ -226,6 +229,9 @@
    </property>
   </action>
   <action name="correctionRandA">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Коррекция R и A</string>
    </property>
@@ -293,9 +299,9 @@
     <string>Графический анализ</string>
    </property>
   </action>
-  <action name="localizationIncrease">
+  <action name="localization">
    <property name="text">
-    <string>Локализация (увеличить)</string>
+    <string>Локализация</string>
    </property>
   </action>
   <action name="localizationReduce">
@@ -305,7 +311,7 @@
   </action>
   <action name="zonalLocalization">
    <property name="text">
-    <string>Зонная локация</string>
+    <string>Зонная локализация</string>
    </property>
   </action>
   <action name="copy">
@@ -337,6 +343,26 @@
   <action name="deleteCasualNoise">
    <property name="text">
     <string>Удаление случайных э/м помех...</string>
+   </property>
+  </action>
+  <action name="readFileAttenuation">
+   <property name="text">
+    <string>Прочитать файл функции затухания...</string>
+   </property>
+  </action>
+  <action name="saveFileAttenuationAs">
+   <property name="text">
+    <string>Сохранить файл функции затухания как...</string>
+   </property>
+  </action>
+  <action name="enter_editFunctionAttenuation">
+   <property name="text">
+    <string>Ввод/изменение функции затухания...</string>
+   </property>
+  </action>
+  <action name="computeAmplitudeEvents">
+   <property name="text">
+    <string>Вычисление приведённых амплитуд событий</string>
    </property>
   </action>
  </widget>

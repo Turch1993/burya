@@ -67,16 +67,6 @@
     </widget>
    </widget>
   </widget>
-  <widget class="QGraphicsView" name="graphicsView">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>251</width>
-     <height>91</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QSplitter" name="splitter_2">
    <property name="geometry">
     <rect>
@@ -89,11 +79,6 @@
    <property name="orientation">
     <enum>Qt::Vertical</enum>
    </property>
-   <widget class="QPushButton" name="apply">
-    <property name="text">
-     <string>&amp;Применить</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="set">
     <property name="text">
      <string>&amp;Установить</string>
@@ -105,7 +90,25 @@
     </property>
    </widget>
   </widget>
+  <widget class="QCustomPlot" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>251</width>
+     <height>91</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

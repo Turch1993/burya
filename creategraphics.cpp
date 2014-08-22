@@ -3,12 +3,12 @@
 
 createGraphics::createGraphics(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::createGraphics)
+    ui_graphics(new Ui::createGraphics)
 {
-    ui->setupUi(this);
+    ui_graphics->setupUi(this);
 }
 
 createGraphics::~createGraphics()
 {
-    delete ui;
+    delete ui_graphics;
 }

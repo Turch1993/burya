@@ -19,6 +19,8 @@ public:
     ~DialogColor();
 
 private:
+    void paintEvent(QEvent *event);
+    QVector <double> x, y;
     QColor backgroundColor;
     QColor LineColor;
     Ui::DialogColor *ui_color;

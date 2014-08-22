@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += sql
+QT       += printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,11 +17,18 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     database.cpp \
-    dialogcolor.cpp
+    dialogcolor.cpp \
+    qcustomplot.cpp \
+    creategraphics.cpp
 
 HEADERS  += mainwindow.h \
     database.h \
-    dialogcolor.h
+    dialogcolor.h \
+    qcustomplot.h \
+    creategraphics.h
 
 FORMS    += mainwindow.ui \
-    dialogcolor.ui
+    dialogcolor.ui \
+    creategraphics.ui
+
+CONFIG += qwt
