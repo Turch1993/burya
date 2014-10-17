@@ -1,7 +1,7 @@
 #ifndef CREATEGRAPHICS_H
 #define CREATEGRAPHICS_H
 
-#include <QDialog>
+#include <header.h>
 
 namespace Ui {
 class createGraphics;

@@ -1,7 +1,7 @@
 #ifndef SENSORSARRANGEMENT_H
 #define SENSORSARRANGEMENT_H
 
-#include <QDialog>
+#include <header.h>
 
 namespace Ui {
 class sensorsArrangement;
@@ -16,7 +16,7 @@ public:
     ~sensorsArrangement();
 
 private:
-    Ui::sensorsArrangement *ui;
+    Ui::sensorsArrangement *ui_sensors;
 };
 
 #endif // SENSORSARRANGEMENT_H

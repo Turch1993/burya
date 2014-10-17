@@ -1,13 +1,11 @@
 #include "mainwindow.h"
 #include "database.h"
 #include "ui_mainwindow.h"
-#include <QFileDialog>
 #include <creategraphics.h>
-#include <qmdisubwindow.h>
-#include <QMessageBox>
 #include <dialogcolor.h>
-#include <QTableView>
-#include <QSqlQueryModel>
+#include <sensorsarrangement.h>
+#include <settings.h>
+#include <selectSensors.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,8 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->saveGraphicsSetAs, SIGNAL(triggered()), this, SLOT(saveGraphicsSetAsDialog()));
     connect(ui->readFileAttenuation, SIGNAL(triggered()), this, SLOT(readFileFunctionAttenuationDialog()));
     connect(ui->saveFileAttenuationAs, SIGNAL(triggered()), this, SLOT(saveFileFunctionAttenuationDialog()));
-    connect(ui->setBlackWhiteColor, SIGNAL(triggered(bool)), this, SLOT(setBlackWhiteColorDialog(bool)));
-    connect(ui->setManualColor, SIGNAL(triggered(bool)), this, SLOT(setManualColorDialog(bool)));
+    connect(ui->setBlackWhiteColor, SIGNAL(triggered()), this, SLOT(setBlackWhiteColorDialog()));
+    connect(ui->setManualColor, SIGNAL(triggered()), this, SLOT(setManualColorDialog()));
     connect(ui->enter_editFunctionAttenuation, SIGNAL(triggered()), this, SLOT(enterEditFunctionAttenuationDialog()));
     connect(ui->computeAmplitudeEvents, SIGNAL(triggered()), this, SLOT(computeAmplitudeEventsDialog()));
     connect(ui->correctionRandA, SIGNAL(triggered()), this, SLOT(correctionRandADialog()));
@@ -49,7 +47,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->deletePeriodicNoise, SIGNAL(triggered()), this, SLOT(deletePeriodicNoiseDialog()));
     connect(ui->deleteCasualNoise, SIGNAL(triggered()), this, SLOT(deleteCasualNoiseDialog()));
     connect(ui->menuAbout, SIGNAL(aboutToShow()), this, SLOT(aboutDialog()));
-    ui->setDefaultColor->setChecked(true);
+    conf = new QSettings(QSettings::NativeFormat, QSettings::UserScope, "AE_analysis", "CMiR");
+    getColorMode();
+    if (colorMode)
+    {
+        ui->setManualColor->setChecked(true);
+    }
+    else
+    {
+        ui->setBlackWhiteColor->setChecked(true);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -61,13 +68,21 @@ void MainWindow::openDatabaseDialog()
 {
     QString path = QFileDialog::getOpenFileName(0, "Открыть базу данных", "", "Файлы баз данных (*.db)");
     database *db = new database;
-    bool isOpened = db->readMainDatabase(path);
-    if(isOpened)
+    isDbOpened = db->readMainDatabase(path);
+    if(isDbOpened)
     {
-    ui->menuGraphics->setEnabled(true);
-    ui->menuTables->setEnabled(true);
-    ui->menuTasks->setEnabled(true);
-    ui->menuWindow->setEnabled(true);
+        ui->menuPreparationOfSensors->setEnabled(true);
+        ui->tableOfSignals->setEnabled(true);
+        ui->StatisticsByChannel->setEnabled(true);
+        ui->equipmentParameters->setEnabled(true);
+        ui->timeOfCommandStartPause->setEnabled(true);
+        ui->ASLbyChannel->setEnabled(true);
+        ui->createGraphics->setEnabled(true);
+
+    }
+    else
+    {
+        QMessageBox::critical(0, "Ошибка открытия базы данных", "При открытии базы данных произошла ошибка");
     }
 }
 
@@ -76,18 +91,29 @@ void MainWindow::createDatabaseDialog()
     QString pathFile = QFileDialog::getOpenFileName(0, "Создать базу данных", "База данных", "Файлы АЭ (*.cmr)");
     QString pathBase = QFileDialog::getSaveFileName(0, "Создать базу данных", "База данных", "Файлы баз данных (*.db)");
     database *db = new database;
-    bool isCreated = db->createMainDatabase(pathFile, pathBase);
-    if(isCreated)
+    isDbOpened = db->createMainDatabase(pathFile, pathBase);
+    if(isDbOpened)
     {
-    ui->menuGraphics->setEnabled(true);
-    ui->menuTables->setEnabled(true);
-    ui->menuTasks->setEnabled(true);
-    ui->menuWindow->setEnabled(true);
+        ui->computeAmplitudeEvents->setEnabled(true);
+        ui->correctionRandA->setEnabled(true);
+        ui->menuPreparationOfSensors->setEnabled(true);
+        ui->tableOfSignals->setEnabled(true);
+        ui->StatisticsByChannel->setEnabled(true);
+        ui->equipmentParameters->setEnabled(true);
+        ui->timeOfCommandStartPause->setEnabled(true);
+        ui->ASLbyChannel->setEnabled(true);
+        ui->createGraphics->setEnabled(true);
+    }
+    else
+    {
+        QMessageBox::critical(0, "Ошибка создания базы данных", "При создании базы данных произошла ошибка");
     }
 }
 
 void MainWindow::createSensorsPositionDialog()
 {
+    sensorsArrangement *n = new sensorsArrangement;
+    n->showMaximized();
     ui->saveSensorsPositionAs->setEnabled(true);
 }
 
@@ -121,23 +147,27 @@ void MainWindow::saveFileFunctionAttenuationDialog()
 
 }
 
-void MainWindow::setBlackWhiteColorDialog(bool isChecked)
+void MainWindow::setBlackWhiteColorDialog()
 {
-    if (isChecked)
-    {
-        ui->setDefaultColor->setChecked(false);
-        ui->setManualColor->setChecked(false);
-    }
+    ui->setManualColor->setChecked(false);
+    ui->setBlackWhiteColor->setChecked(true);
+    conf->setValue("color/backgroundColor", QColor(Qt::white));
+    conf->setValue("color/lineColor", QColor(Qt::black));
+    colorMode=0;
+    conf->setValue("color/mode", colorMode);
+    conf->sync();
 }
 
-void MainWindow::setManualColorDialog(bool isChecked)
+void MainWindow::setManualColorDialog()
 {
-    if (isChecked)
-    {
-        ui->setBlackWhiteColor->setChecked(false);
-        ui->setDefaultColor->setChecked(false);
-    }
+    ui->setBlackWhiteColor->setChecked(false);
+    ui->setManualColor->setChecked(true);
     DialogColor *color = new DialogColor;
+    getColorMode();
+    if (!colorMode)
+    {
+    connect(color, SIGNAL(canceledButton()), this, SLOT(setBlackWhiteColorDialog()));
+    }
     color->show();
 }
 
@@ -177,17 +207,22 @@ void MainWindow::tableOfSignalsDialog()
     tableSignals->setWidget(view);
     view->setColumnHidden(0, true);
     model->setHeaderData(0, Qt::Horizontal, "Id");
-    model->setHeaderData(1, Qt::Horizontal, "Номер канала");
-    model->setHeaderData(2, Qt::Horizontal, "Время начала регистрации сигнала");
-    model->setHeaderData(3, Qt::Horizontal, "Максимальная амплитуда");
-    model->setHeaderData(4, Qt::Horizontal, "Время нарастания");
-    model->setHeaderData(5, Qt::Horizontal, "Амплитуда первого пика");
-    model->setHeaderData(6, Qt::Horizontal, "Время нарастания до 1-го пика амплитуды");
-    model->setHeaderData(7, Qt::Horizontal, "Длительность сигнала");
+    model->setHeaderData(1, Qt::Horizontal, "Номер\nканала");
+    model->setHeaderData(2, Qt::Horizontal, "Время начала\nрегистрации сигнала, мкс");
+    model->setHeaderData(3, Qt::Horizontal, "Максимальная\nамплитуда, дБ");
+    model->setHeaderData(4, Qt::Horizontal, "Время\nнарастания, мкс");
+    model->setHeaderData(5, Qt::Horizontal, "Амплитуда\nпервого пика, дБ");
+    model->setHeaderData(6, Qt::Horizontal, "Время нарастания до 1-го\nпика амплитуды, мкс");
+    model->setHeaderData(7, Qt::Horizontal, "Длительность\nсигнала, мкс");
     model->setHeaderData(8, Qt::Horizontal, "Осцилляции");
-    model->setHeaderData(9, Qt::Horizontal, "Порог");
-    model->setHeaderData(10, Qt::Horizontal, "Есть ли форма сигнала?");
-    tableSignals->show();
+    model->setHeaderData(9, Qt::Horizontal, "Порог, дБ");
+    model->setHeaderData(10, Qt::Horizontal, "Есть ли\nформа сигнала?");
+    tableSignals->setWindowTitle("Таблица сигналов");
+    view->resizeColumnsToContents();
+    tableSignals->showMaximized();
+    /*model->setHeaderData(0, Qt::Vertical, "Id");
+    model->setHeaderData(1, Qt::HANDLE);
+    view->setTabOrder(QWidget *paint);*/
 
 }
 
@@ -198,12 +233,59 @@ void MainWindow::tableOfClastersDialog()
 
 void MainWindow::statisticsByChannelDialog()
 {
-
+    selectSensors *sensors = new selectSensors;
+    sensors->searchSensors();
+    /*QMdiSubWindow *tableSignals = new QMdiSubWindow;
+    ui->centralWidget->addSubWindow(tableSignals);
+    QTableView *view = new QTableView;
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery("SELECT * FROM SIGNALS");
+    view->setModel(model);
+    tableSignals->setWidget(view);
+    view->setColumnHidden(0, true);
+    model->setHeaderData(0, Qt::Horizontal, "Id");
+    model->setHeaderData(1, Qt::Horizontal, "Номер\nканала");
+    model->setHeaderData(2, Qt::Horizontal, "Время начала\nрегистрации сигнала, мкс");
+    model->setHeaderData(3, Qt::Horizontal, "Максимальная\nамплитуда, дБ");
+    model->setHeaderData(4, Qt::Horizontal, "Время\nнарастания, мкс");
+    model->setHeaderData(5, Qt::Horizontal, "Амплитуда\nпервого пика, дБ");
+    model->setHeaderData(6, Qt::Horizontal, "Время нарастания до 1-го\nпика амплитуды, мкс");
+    model->setHeaderData(7, Qt::Horizontal, "Длительность\nсигнала, мкс");
+    model->setHeaderData(8, Qt::Horizontal, "Осцилляции");
+    model->setHeaderData(9, Qt::Horizontal, "Порог, дБ");
+    model->setHeaderData(10, Qt::Horizontal, "Есть ли\nформа сигнала?");
+    tableSignals->setWindowTitle("Таблица сигналов");
+    view->resizeColumnsToContents();
+    tableSignals->showMaximized();*/
 }
 
 void MainWindow::equipmentParametersDialog()
 {
-
+    QMdiSubWindow *tableSignals = new QMdiSubWindow;
+    ui->centralWidget->addSubWindow(tableSignals);
+    QTableView *view = new QTableView;
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery("SELECT * FROM EQUIPMENT");
+    view->setModel(model);
+    tableSignals->setWidget(view);
+    view->setColumnHidden(0, true);
+    model->setHeaderData(0, Qt::Horizontal, "Id");
+    model->setHeaderData(1, Qt::Horizontal, "Усиление 1, дБ, мкс");
+    model->setHeaderData(2, Qt::Horizontal, "Усиление 2, дБ");
+    model->setHeaderData(3, Qt::Horizontal, "Плавающий порог");
+    model->setHeaderData(4, Qt::Horizontal, "Порог, дБ");
+    model->setHeaderData(5, Qt::Horizontal, "ИКП, мкс");
+    model->setHeaderData(6, Qt::Horizontal, "ИКД, мкс");
+    model->setHeaderData(7, Qt::Horizontal, "ИКК, мкс");
+    model->setHeaderData(8, Qt::Horizontal, "ФВЧ, Гц");
+    model->setHeaderData(9, Qt::Horizontal, "ФНЧ, Гц");
+    tableSignals->setWindowTitle("Параметры аппаратуры");
+    view->resizeColumnsToContents();
+    tableSignals->showMaximized();
+    view->horizontalHeader()->setStyleSheet("QHeaderView::section {background-color: rgba(255, 0, 0, 0.2)}");
+    view->verticalHeader()->setStyleSheet("QHeaderView::section {background-color:blue}");
+    view->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    view->selectRow(15);
 }
 
 void MainWindow::sensorsLocaitonDialog()
@@ -213,7 +295,21 @@ void MainWindow::sensorsLocaitonDialog()
 
 void MainWindow::timeOfCommandStartPauseDialog()
 {
-
+    QMdiSubWindow *tableSignals = new QMdiSubWindow;
+    ui->centralWidget->addSubWindow(tableSignals);
+    QTableView *view = new QTableView;
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery("SELECT * FROM START_PAUSE");
+    view->setModel(model);
+    tableSignals->setWidget(view);
+    view->setColumnHidden(0, true);
+    model->setHeaderData(0, Qt::Horizontal, "Id");
+    model->setHeaderData(1, Qt::Horizontal, "СТАРТ, мкс");
+    model->setHeaderData(2, Qt::Horizontal, "ПАУЗА, мкс");
+    model->setHeaderData(3, Qt::Horizontal, "ASL, дБ");
+    tableSignals->setWindowTitle("Время СТАРТА и ПАУЗЫ");
+    view->resizeColumnsToContents();
+    tableSignals->showMaximized();
 }
 
 void MainWindow::ASLbyChannelDialog()
@@ -223,15 +319,16 @@ void MainWindow::ASLbyChannelDialog()
     QTableView *view = new QTableView;
     QSqlQueryModel *model = new QSqlQueryModel;
     model->setQuery("SELECT * FROM ASL");
-    qDebug()<<model->lastError();
     view->setModel(model);
     tableSignals->setWidget(view);
     view->setColumnHidden(0, true);
     model->setHeaderData(0, Qt::Horizontal, "Id");
-    model->setHeaderData(1, Qt::Horizontal, "Время измерения");
+    model->setHeaderData(1, Qt::Horizontal, "Время измерения, мкс");
     model->setHeaderData(2, Qt::Horizontal, "Номер канала");
-    model->setHeaderData(3, Qt::Horizontal, "ASL");
-    tableSignals->show();
+    model->setHeaderData(3, Qt::Horizontal, "ASL, дБ");
+    tableSignals->setWindowTitle("ASL по каналам");
+    view->resizeColumnsToContents();
+    tableSignals->showMaximized();
 }
 
 void MainWindow::findDialog()
@@ -289,4 +386,9 @@ void MainWindow::aboutDialog()
 {
     QMessageBox *about = new QMessageBox;
     about->about(0, "О программе", "Проверка");
+}
+
+void MainWindow::getColorMode()
+{
+    colorMode=conf->value("color/mode").toBool();
 }

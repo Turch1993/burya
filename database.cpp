@@ -1,7 +1,4 @@
 #include "database.h"
-#include <QMessageBox>
-#include <QFile>
-#include <QProgressDialog>
 
 bool database::createMainDatabase(QString pathFile, QString pathBase)
 {
@@ -14,7 +11,7 @@ bool database::createMainDatabase(QString pathFile, QString pathBase)
     query->exec("PRAGMA temp_store=MEMORY");
     query->exec("PRAGMA count_changes=FALSE");
     query->exec("PRAGMA journal_mode=OFF");
-    query->exec("CREATE TABLE SIGNALS"
+    query->exec("CREATE TABLE SIGNALS_TEMP"
                         "(Id                        INTEGER PRIMARY KEY AUTOINCREMENT,"
                         "Channel                    INTEGER,"
                         "RegTime                    REAL,"
@@ -39,8 +36,16 @@ bool database::createMainDatabase(QString pathFile, QString pathBase)
                         "PAUSE                      REAL)"
                 );
     query->exec("CREATE TABLE EQUIPMENT"
-                        "(Id                        INTEGER PRIMARY KEY AUTOINCREMENT)"
-
+                        "(Id                        INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        "Gain1                      REAL,"
+                        "Gain2                      REAL,"
+                        "FloatStep                  TEXT,"
+                        "Step                       REAL,"
+                        "IKP                        INTEGER,"
+                        "IKD                        INTEGER,"
+                        "IKK                        INTEGER,"
+                        "MinF                       REAL,"
+                        "MaxF                       REAL)"
                 );
     query->exec("CREATE TABLE DISTANCE"
                         "(Id                        INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -52,22 +57,37 @@ bool database::createMainDatabase(QString pathFile, QString pathBase)
     QByteArray p (pathFile.toUtf8());
     char *ph = p.data();
     data = fopen(ph, "rb");
-    bool isForm;
+    bool isForm, step;
     QString Form;
     qint32 id, channel, riseTime, riseTimeBeforeFirstPeak,
             durationOfSignal, countOscillation;
-    float maxAmp, firstPeakAmp, ASLanddB;
+    float maxAmp, firstPeakAmp, ASLanddB, minF, maxF;
     qint64 regTime;
+    if ((!isCreated)&&(data==NULL))
+    {
+        isCreated=false;
+        return isCreated;
+    }
+    else
+    {
     fseek(data, 0, SEEK_END);
     QProgressDialog *progress = new QProgressDialog("Создание базы данных...", "&Отмена", 0, ftell(data));
     fseek(data, 0, SEEK_SET);
+    progress->setModal(true);
     progress->setWindowTitle("Пожалуйста подождите");
     progress->setMinimumDuration(0);
-    progress->setAutoClose(true);
     query->exec("BEGIN");
     while (id!=ID_EOM)
     {
         fread(&id, 4, 1, data);
+        progress->setValue(ftell(data));
+        qApp->processEvents();
+        qDebug()<<id;
+        if (progress->wasCanceled())
+        {
+            isCreated=false;
+            break;
+        }
         if (id==ID_SIG)
         {
             fread(&channel, 4, 1, data);
@@ -88,7 +108,7 @@ bool database::createMainDatabase(QString pathFile, QString pathBase)
             {
                 Form="Нет";
             }
-            query->prepare("INSERT INTO SIGNALS"
+            query->prepare("INSERT INTO SIGNALS_TEMP"
                                     " (Channel, RegTime, MaxAmp, RiseTIme,"
                                     "FirstPeakAmp, RiseTImeBeforeFirstPeak,"
                                     "DurationOfSignal, CountOscillation,"
@@ -123,32 +143,55 @@ bool database::createMainDatabase(QString pathFile, QString pathBase)
             query->exec();
             }
         }
-        fseek(data, passBytes(id), SEEK_CUR);
-        progress->setValue(ftell(data));
-        if (progress->wasCanceled())
+        if (id==ID_HW)
         {
-            break;
+
+            fseek(data, 24, SEEK_CUR);
+            for (int i=1; i<=8; i++)
+            {
+                fseek(data, 1, SEEK_CUR);
+                fread(&step, 1, 1, data);
+                if(step)
+                {
+                    Form="Да";
+                }
+                else
+                {
+                    Form="Нет";
+                }
+                fread(&maxAmp, 4, 1, data);
+                fread(&firstPeakAmp, 4, 1, data);
+                fread(&ASLanddB, 4, 1, data);
+                fread(&channel, 4, 1, data);
+                fread(&riseTime, 4, 1, data);
+                fread(&riseTimeBeforeFirstPeak, 4, 1, data);
+                fread(&minF, 4, 1, data);
+                fread(&maxF, 4, 1, data);
+                fseek(data, 1, SEEK_CUR);
+                query->prepare("INSERT INTO EQUIPMENT"
+                                        " (Gain1, Gain2, FloatStep, Step, IKP, IKD, IKK, MinF, MaxF)"
+                                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                               );
+                query->addBindValue(firstPeakAmp);
+                query->addBindValue(ASLanddB);
+                query->addBindValue(Form);
+                query->addBindValue(maxAmp);
+                query->addBindValue(channel);
+                query->addBindValue(riseTime);
+                query->addBindValue(riseTimeBeforeFirstPeak);
+                query->addBindValue(minF);
+                query->addBindValue(maxF);
+                query->exec();
+            }
         }
-        qApp->processEvents();
+        fseek(data, passBytes(id), SEEK_CUR);
     }
-    delete progress;
+    query->exec("CREATE TABLE SIGNALS AS SELECT * FROM SIGNALS_TEMP");
+    query->exec("ALTER TABLE SIGNALS ADD Cluster TEXT");
     query->exec("COMMIT");
-    db.close();
     fclose(data);
-
-    /*if (!isCreated)
-    {
-        QMessageBox::critical(0, "Ошибка создания базы данных", "При создании базы данных произошла ошибка");
-
-        qDebug()<<"Error";
-        return false;
+    return isCreated;
     }
-    else
-    {
-        qDebug()<<"Base created";
-        return true;
-    }*/
-    return true;
 }
 
 bool database::readMainDatabase(QString path)
@@ -157,36 +200,35 @@ bool database::readMainDatabase(QString path)
     db.setDatabaseName(path);
     if (!db.open())
     {
-        QMessageBox::critical(0, "Ошибка открытия базы данных", "При открытии базы данных произошла ошибка");
-        qDebug()<<"Error";
         return false;
     }
     else
     {
-        qDebug()<<"Base opened";
         return true;
     }
 }
 
 int database::passBytes(qint32 id)
 {
+    int skip;
     switch (id)
     {
     case ID_MDF:
-        return 12;
+        skip=12;
     case ID_HW:
-        return 304;
+        skip=0;
     case ID_TDD:
-        return 0;
+        skip=0;
     case ID_PAR:
-        return 16;
+        skip=16;
     case ID_SIG:
-        return 0;
+        skip=0;
     case ID_START:
-        return 4;
+        skip=4;
     case ID_PAUSE:
-        return 4;
+        skip=4;
     case ID_EOM:
-        return 0;
+        skip=0;
     }
+    return skip;
 }

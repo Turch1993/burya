@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
+#include <header.h>
 
 namespace Ui
 {
@@ -18,6 +18,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QSettings *conf;
+    void getColorMode();
 private slots:
     void openDatabaseDialog();
     void createDatabaseDialog();
@@ -28,8 +30,8 @@ private slots:
     void saveGraphicsSetAsDialog();
     void readFileFunctionAttenuationDialog();
     void saveFileFunctionAttenuationDialog();
-    void setBlackWhiteColorDialog(bool isChecked);
-    void setManualColorDialog(bool isChecked);
+    void setBlackWhiteColorDialog();
+    void setManualColorDialog();
     void enterEditFunctionAttenuationDialog();
     void computeAmplitudeEventsDialog();
     void correctionRandADialog();

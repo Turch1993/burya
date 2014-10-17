@@ -10,7 +10,7 @@
 #define ID_PAUSE   1432028480
 #define ID_EOM     678923475
 
-#include <QtSql>
+#include <header.h>
 
 class database
 {

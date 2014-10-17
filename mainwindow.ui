@@ -60,6 +60,9 @@
      <string>&amp;Задачи</string>
     </property>
     <widget class="QMenu" name="menuPreparationOfSensors">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Подготовка данных</string>
      </property>
@@ -109,7 +112,7 @@
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>&amp;Окно</string>
@@ -199,14 +202,6 @@
     <string>Ctrl+W</string>
    </property>
   </action>
-  <action name="setDefaultColor">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>По умолчанию</string>
-   </property>
-  </action>
   <action name="setBlackWhiteColor">
    <property name="checkable">
     <bool>true</bool>
@@ -230,13 +225,16 @@
   </action>
   <action name="correctionRandA">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Коррекция R и A</string>
    </property>
   </action>
   <action name="location">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Локация...</string>
    </property>
@@ -247,41 +245,65 @@
    </property>
   </action>
   <action name="tableOfSignals">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Таблица сигналов</string>
    </property>
   </action>
   <action name="tableOfClasters">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Таблица кластеров</string>
    </property>
   </action>
   <action name="StatisticsByChannel">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Статистика по каналам</string>
    </property>
   </action>
   <action name="equipmentParameters">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Параметры аппаратуры</string>
    </property>
   </action>
   <action name="sensorsLocation">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Расположение приемников</string>
    </property>
   </action>
   <action name="timeOfCommandStartPause">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Время команд СТАРТ, ПАУЗА</string>
    </property>
   </action>
   <action name="ASLbyChannel">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>ASL по каналам</string>
    </property>
   </action>
   <action name="find">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Найти...</string>
    </property>
@@ -290,16 +312,25 @@
    </property>
   </action>
   <action name="createGraphics">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Создание графиков...</string>
    </property>
   </action>
   <action name="graphicsAnalysis">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Графический анализ</string>
    </property>
   </action>
   <action name="localization">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Локализация</string>
    </property>
@@ -310,11 +341,17 @@
    </property>
   </action>
   <action name="zonalLocalization">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Зонная локализация</string>
    </property>
   </action>
   <action name="copy">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Копировать</string>
    </property>
@@ -323,6 +360,9 @@
    </property>
   </action>
   <action name="saveInFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Сохранить в файл...</string>
    </property>
@@ -351,6 +391,9 @@
    </property>
   </action>
   <action name="saveFileAttenuationAs">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Сохранить файл функции затухания как...</string>
    </property>
@@ -361,6 +404,9 @@
    </property>
   </action>
   <action name="computeAmplitudeEvents">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Вычисление приведённых амплитуд событий</string>
    </property>

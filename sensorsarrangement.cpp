@@ -3,12 +3,12 @@
 
 sensorsArrangement::sensorsArrangement(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::sensorsArrangement)
+    ui_sensors(new Ui::sensorsArrangement)
 {
-    ui->setupUi(this);
+    ui_sensors->setupUi(this);
 }
 
 sensorsArrangement::~sensorsArrangement()
 {
-    delete ui;
+    delete ui_sensors;
 }
