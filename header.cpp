@@ -5,3 +5,4 @@ bool isSensorsPlaced;
 bool colorMode;
 QColor backgroundColor;
 QColor LineColor;
+int countEvents;

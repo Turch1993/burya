@@ -187,7 +187,8 @@ bool database::createMainDatabase(QString pathFile, QString pathBase)
         fseek(data, passBytes(id), SEEK_CUR);
     }
     query->exec("CREATE TABLE SIGNALS AS SELECT * FROM SIGNALS_TEMP");
-    query->exec("ALTER TABLE SIGNALS ADD Cluster TEXT");
+    query->exec("ALTER TABLE SIGNALS ADD Events INTEGER");
+    query->exec("ALTER TABLE SIGNALS ADD Cluster INTEGER");
     query->exec("COMMIT");
     fclose(data);
     return isCreated;

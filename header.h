@@ -27,5 +27,6 @@ extern bool isSensorsPlaced;
 extern bool colorMode;
 extern QColor backgroundColor;
 extern QColor LineColor;
+extern int countEvents;
 
 #endif // HEADER_H
